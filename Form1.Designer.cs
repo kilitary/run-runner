@@ -33,13 +33,13 @@
 			// 
 			// centerText
 			// 
-			this.centerText.BackColor = System.Drawing.SystemColors.HighlightText;
+			this.centerText.BackColor = System.Drawing.Color.Honeydew;
 			this.centerText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.centerText.CausesValidation = false;
 			this.centerText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.centerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.centerText.Font = new System.Drawing.Font("Shruti", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.centerText.ForeColor = System.Drawing.Color.ForestGreen;
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.ForeColor = System.Drawing.Color.Gray;
 			this.centerText.Location = new System.Drawing.Point(0, 0);
 			this.centerText.Name = "centerText";
 			this.centerText.Size = new System.Drawing.Size(684, 97);
@@ -55,7 +55,7 @@
 			this.Controls.Add(this.centerText);
 			this.Cursor = System.Windows.Forms.Cursors.No;
 			this.DoubleBuffered = true;
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Form1";

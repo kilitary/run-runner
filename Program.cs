@@ -20,9 +20,7 @@ namespace run_runner
 			argsOriginal = args;
 			ApplicationConfiguration.Initialize();
 			pForm = new Form1();
-			//pForm.centerText.Text = $"Running {programName} ...";
 			Application.Run(pForm);
-
 		}
 	}
 }
