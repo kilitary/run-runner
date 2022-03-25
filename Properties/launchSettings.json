@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "run-runner": {
+      "commandName": "Project",
+      "commandLineArgs": "calc.exe fg dfg",
+      "workingDirectory": "S:\\temp"
+    }
+  }
+}
