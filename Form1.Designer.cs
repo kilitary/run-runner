@@ -33,16 +33,16 @@
 			// 
 			// centerText
 			// 
-			this.centerText.BackColor = System.Drawing.Color.Honeydew;
+			this.centerText.BackColor = System.Drawing.Color.Gold;
 			this.centerText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.centerText.CausesValidation = false;
 			this.centerText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.centerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.centerText.ForeColor = System.Drawing.Color.Gray;
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.ForeColor = System.Drawing.Color.Black;
 			this.centerText.Location = new System.Drawing.Point(0, 0);
 			this.centerText.Name = "centerText";
-			this.centerText.Size = new System.Drawing.Size(684, 97);
+			this.centerText.Size = new System.Drawing.Size(382, 41);
 			this.centerText.TabIndex = 0;
 			this.centerText.Text = "centerText";
 			this.centerText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -51,7 +51,7 @@
 			// 
 			// Form1
 			// 
-			this.ClientSize = new System.Drawing.Size(684, 97);
+			this.ClientSize = new System.Drawing.Size(382, 41);
 			this.Controls.Add(this.centerText);
 			this.Cursor = System.Windows.Forms.Cursors.No;
 			this.DoubleBuffered = true;
