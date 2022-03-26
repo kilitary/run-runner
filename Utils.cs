@@ -88,9 +88,10 @@ namespace run_runner
 				return JsonConvert.SerializeObject(obj);
 		}
 
-		public static String GetTimestamp(DateTime value = new DateTime())
+		public static long GetTimestamp()
 		{
-			return value.ToString("yyyyMMddHHmmssffff");
+			DateTimeOffset now = (DateTimeOffset) DateTime.UtcNow;
+			return now.ToUnixTimeSeconds();
 		}
 	}
 }

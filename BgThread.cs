@@ -13,6 +13,8 @@ namespace run_runner
 		public static string[] cyclers = new string[] { "/", "|", "\\", "-" };
 		public static string cycler = " ";
 		public static string[] servicesStarting = new string[0];
+		public static bool run = true;
+		public static List<int> knownPids = new List<int>();
 
 		public enum SimpleServiceCustomCommands
 		{ StopWorker = 128, RestartWorker, CheckWorker };
@@ -101,8 +103,6 @@ namespace run_runner
 
 			while(till > 0)
 			{
-
-
 				if(servicesStarting.Length > 0)
 				{
 					temps = "services: " + string.Join(",", servicesStarting);
@@ -126,7 +126,7 @@ namespace run_runner
 			Thread.Sleep(266);
 
 			int servicesPid = 0;
-			int emptyTimeSeconds = 0;
+			long emptyTimeSeconds = 0;
 
 			/*♡
 	░ ♡ ▄▀▀▀▄░░♡░
@@ -142,29 +142,41 @@ namespace run_runner
 		░░░░░░░░░░░▌▌░▌▌░░░░░
 		░░░░░░░░░░░▌▌░▌▌░░░░░
 		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
-
-			for(; ; )
+			int i = 0;
+			while(run)
 			{
-				Thread.Sleep(150);
+				Thread.Sleep(350);
 
+				if(GetTimestamp() >= emptyTimeSeconds + 1)
+				{
+					run_runner.Program.pForm.Visible = false;
+				}
 
 				Process[] processCollection = Process.GetProcesses();
 				foreach(Process p in processCollection)
 				{
-					if(servicesPid <= 0 && p.ProcessName.Contains("wininit", StringComparison.OrdinalIgnoreCase))
+					if(knownPids.Contains(p.Id))
+						continue;
+
+					knownPids.Add(p.Id);
+
+					if(servicesPid == 0 && p.ProcessName.Contains("services", StringComparison.OrdinalIgnoreCase))
 					{
 						servicesPid = p.Id;
 						Debug($"found services: {servicesPid}");
 					}
 
-					if(p.Parent() != null && p.Parent().Id == servicesPid)
+					if(p.Parent()?.Id == servicesPid)
 					{
-						if(cycleD >= cyclers.Length)
+						if(++cycleD >= cyclers.Length)
 							cycleD = 0;
-						cycler = cyclers[cycleD++];
+						cycler = cyclers[cycleD];
 
-						run_runner.Program.pForm.Invoke((MethodInvoker) (() =>
+						emptyTimeSeconds = GetTimestamp();
+						
+						run_runner.Program.pForm.centerText.Invoke((MethodInvoker) (() =>
 						{
+							run_runner.Program.pForm.Visible = true;
 							run_runner.Program.pForm.centerText.Text = $"{p.ProcessName} {cycler} {temps}";
 						}));
 					}

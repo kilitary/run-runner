@@ -36,9 +36,9 @@
 			// 
 			this.centerText.BackColor = System.Drawing.Color.Black;
 			this.centerText.CausesValidation = false;
-			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.centerText.ForeColor = System.Drawing.Color.PaleGreen;
-			this.centerText.Location = new System.Drawing.Point(125, 34);
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.ForeColor = System.Drawing.Color.DarkOrange;
+			this.centerText.Location = new System.Drawing.Point(110, 34);
 			this.centerText.Name = "centerText";
 			this.centerText.Size = new System.Drawing.Size(386, 22);
 			this.centerText.TabIndex = 0;
@@ -50,12 +50,12 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Source Code Pro", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.label1.Location = new System.Drawing.Point(29, 36);
+			this.label1.Font = new System.Drawing.Font("Source Code Pro", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label1.Location = new System.Drawing.Point(12, 37);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(80, 17);
+			this.label1.Size = new System.Drawing.Size(81, 19);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Starting:";
+			this.label1.Text = "Running:";
 			// 
 			// Form1
 			// 
@@ -65,13 +65,14 @@
 			this.ClientSize = new System.Drawing.Size(523, 93);
 			this.Controls.Add(this.centerText);
 			this.Controls.Add(this.label1);
-			this.Cursor = System.Windows.Forms.Cursors.No;
+			this.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DoubleBuffered = true;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Form1";
 			this.TopMost = true;
+			this.Click += new System.EventHandler(this.Form1_Click);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

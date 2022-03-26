@@ -36,7 +36,7 @@ public static class ProcessExtensions
 		}
 		catch(Exception e)
 		{
-			Debug($"catched excp");
+			Debug($"catched excp {e}");
 		}
 
 		return null;

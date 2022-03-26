@@ -14,15 +14,16 @@ namespace run_runner
 		{
 			InitializeComponent();
 
-			
-
 			ProcessStartInfo start = new ProcessStartInfo();
 			string[] newargs = new string[25];
-			Array.ConstrainedCopy(run_runner.Program.argsOriginal, 1, newargs, 0, run_runner.Program.argsOriginal.Length - 1);
-			start.FileName = run_runner.Program.programName;
-			start.WindowStyle = ProcessWindowStyle.Normal;
-			start.Arguments = String.Join(" ", newargs);
-			Process proc = Process.Start(start);
+			if(run_runner.Program.argsOriginal.Length > 0)
+			{
+				Array.ConstrainedCopy(run_runner.Program.argsOriginal, 1, newargs, 0, run_runner.Program.argsOriginal.Length - 1);
+				start.FileName = run_runner.Program.programName;
+				start.WindowStyle = ProcessWindowStyle.Normal;
+				start.Arguments = String.Join(" ", newargs);
+				Process proc = Process.Start(start);
+			}
 
 			Thread thread1 = new Thread(run_runner.ThreadWork.DoWork);
 			thread1.Start();
@@ -31,6 +32,11 @@ namespace run_runner
 		private void centerText_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void Form1_Click(object sender, EventArgs e)
+		{
+			Environment.Exit(0);
 		}
 	}
 }

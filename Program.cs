@@ -15,8 +15,11 @@ namespace run_runner
 		[STAThread]
 		static void Main(string[] args)
 		{
-			programName = args[0];
-			Debug($"starting {programName}");
+			if(args.Length > 0)
+			{
+				programName = args[0];
+				Debug($"starting {programName}");
+			}
 			argsOriginal = args;
 			ApplicationConfiguration.Initialize();
 			pForm = new Form1();
