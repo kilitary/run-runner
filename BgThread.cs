@@ -43,9 +43,9 @@ namespace run_runner
 					}
 				}*/
 
-				if(sc.Status == ServiceControllerStatus.StartPending)
+				if(sc.Status == ServiceControllerStatus.StartPending || sc.Status == ServiceControllerStatus.StopPending)
 				{
-					Debug($"service {scTemp.ServiceName}: {sc.Status}");
+					Debug($"service {scTemp.ServiceName} шевелица ({sc.Status})");
 					servicesStarting.Append(sc.DisplayName.Trim());
 
 				}
@@ -86,14 +86,14 @@ namespace run_runner
 				Debug("Status = " + sc.Status);*/
 				// Display the event log entries for the custom commands
 				// and the start arguments.
-			/*	EventLog el = new EventLog("Application");
-				EventLogEntryCollection elec = el.Entries;
-				foreach(EventLogEntry ele in elec)
-				{
-					if(ele.Source.IndexOf("SimpleService.OnCustomCommand") >= 0 |
-						ele.Source.IndexOf("SimpleService.Arguments") >= 0)
-						Debug($"msg: {ele.Message}");
-				}*/
+				/*	EventLog el = new EventLog("Application");
+					EventLogEntryCollection elec = el.Entries;
+					foreach(EventLogEntry ele in elec)
+					{
+						if(ele.Source.IndexOf("SimpleService.OnCustomCommand") >= 0 |
+							ele.Source.IndexOf("SimpleService.Arguments") >= 0)
+							Debug($"msg: {ele.Message}");
+					}*/
 			}
 			int cycleD = 0;
 			int till = 40;
@@ -101,9 +101,7 @@ namespace run_runner
 
 			while(till > 0)
 			{
-				if(cycleD >= cyclers.Length)
-					cycleD = 0;
-				cycler = cyclers[cycleD++];
+
 
 				if(servicesStarting.Length > 0)
 				{
@@ -125,7 +123,55 @@ namespace run_runner
 				run_runner.Program.pForm.centerText.Text = $"{run_runner.Program.programName} √";
 			}));
 
-			Thread.Sleep(1266);
+			Thread.Sleep(266);
+
+			int servicesPid = 0;
+			int emptyTimeSeconds = 0;
+
+			/*♡
+	░ ♡ ▄▀▀▀▄░░♡░
+	 ▄███▀░◐░░░▌░░░░░░░
+		░░░░▌░░░░░▐░░░░░░░
+		░░░░▐░░░░░▐░░░░░░░
+		░░░░▌░░░░░▐▄▄░░░░░
+		░░░░▌░░░░▄▀▒▒▀▀▀▀▄
+		░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
+		░░░▐░░░░▐♡▄▒▒▒▒▒▒▒▒▒▀▄
+		░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
+		░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
+		░░░░░░░░░░░▌▌░▌▌░░░░░
+		░░░░░░░░░░░▌▌░▌▌░░░░░
+		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
+
+			for(; ; )
+			{
+				Thread.Sleep(150);
+
+
+				Process[] processCollection = Process.GetProcesses();
+				foreach(Process p in processCollection)
+				{
+					if(servicesPid <= 0 && p.ProcessName.Contains("wininit", StringComparison.OrdinalIgnoreCase))
+					{
+						servicesPid = p.Id;
+						Debug($"found services: {servicesPid}");
+					}
+
+					if(p.Parent() != null && p.Parent().Id == servicesPid)
+					{
+						if(cycleD >= cyclers.Length)
+							cycleD = 0;
+						cycler = cyclers[cycleD++];
+
+						run_runner.Program.pForm.Invoke((MethodInvoker) (() =>
+						{
+							run_runner.Program.pForm.centerText.Text = $"{p.ProcessName} {cycler} {temps}";
+						}));
+					}
+
+					//Debug($"{p.ProcessName}");
+				}
+			}
 
 			Debug($"leaving run-runner");
 			Environment.Exit(0);

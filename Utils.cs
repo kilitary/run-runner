@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -85,6 +86,11 @@ namespace run_runner
 				return JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
 			else
 				return JsonConvert.SerializeObject(obj);
+		}
+
+		public static String GetTimestamp(DateTime value = new DateTime())
+		{
+			return value.ToString("yyyyMMddHHmmssffff");
 		}
 	}
 }
