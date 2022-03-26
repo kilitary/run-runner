@@ -11,30 +11,47 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
-    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <Platforms>AnyCPU;x64</Platforms>
     <BaseOutputPath>result\</BaseOutputPath>
     <PackageIcon>Dialog.png</PackageIcon>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
     <AnalysisLevel>none</AnalysisLevel>
+    <StartupObject>run_runner.Program</StartupObject>
+    <ApplicationIcon>Cinema.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <SignAssembly>False</SignAssembly>
+    <NeutralLanguage>ru-RU</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <FileAlignment>2048</FileAlignment>
+    <WarningLevel>1</WarningLevel>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <FileAlignment>2048</FileAlignment>
+    <WarningLevel>1</WarningLevel>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <FileAlignment>2048</FileAlignment>
+    <WarningLevel>1</WarningLevel>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <FileAlignment>2048</FileAlignment>
+    <WarningLevel>1</WarningLevel>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Cinema.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="G:\Images\Dialog.png">
@@ -54,11 +71,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

@@ -20,6 +20,7 @@ namespace run_runner
 			argsOriginal = args;
 			ApplicationConfiguration.Initialize();
 			pForm = new Form1();
+			pForm.centerText.Text = "Watching system ...";
 			Application.Run(pForm);
 		}
 	}

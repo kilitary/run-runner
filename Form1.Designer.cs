@@ -29,29 +29,41 @@
 		private void InitializeComponent()
 		{
 			this.centerText = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// centerText
 			// 
-			this.centerText.BackColor = System.Drawing.Color.Gold;
+			this.centerText.BackColor = System.Drawing.Color.Transparent;
 			this.centerText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.centerText.CausesValidation = false;
-			this.centerText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.centerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.Black;
-			this.centerText.Location = new System.Drawing.Point(0, 0);
+			this.centerText.Location = new System.Drawing.Point(125, 45);
 			this.centerText.Name = "centerText";
-			this.centerText.Size = new System.Drawing.Size(382, 41);
+			this.centerText.Size = new System.Drawing.Size(227, 22);
 			this.centerText.TabIndex = 0;
 			this.centerText.Text = "centerText";
-			this.centerText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.centerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.centerText.UseCompatibleTextRendering = true;
 			this.centerText.Click += new System.EventHandler(this.centerText_Click);
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Source Code Pro", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label1.Location = new System.Drawing.Point(29, 45);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(90, 19);
+			this.label1.TabIndex = 1;
+			this.label1.Text = "Starting ";
+			// 
 			// Form1
 			// 
-			this.ClientSize = new System.Drawing.Size(382, 41);
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.ClientSize = new System.Drawing.Size(445, 113);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.centerText);
 			this.Cursor = System.Windows.Forms.Cursors.No;
 			this.DoubleBuffered = true;
@@ -61,11 +73,13 @@
 			this.Text = "Form1";
 			this.TopMost = true;
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		public Label centerText;
+		private Label label1;
 	}
 }

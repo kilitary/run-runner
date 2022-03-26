@@ -22,5 +22,26 @@ namespace run_runner.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public char Setting {
+            get {
+                return ((char)(this["Setting"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public string Setting1 {
+            get {
+                return ((string)(this["Setting1"]));
+            }
+            set {
+                this["Setting1"] = value;
+            }
+        }
     }
 }
