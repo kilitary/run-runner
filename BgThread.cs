@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceProcess;
 using static run_runner.Utils;
 
 namespace run_runner
@@ -11,6 +7,9 @@ namespace run_runner
 	{
 		public static void DoWork()
 		{
+
+			ServiceController[] services = ServiceController.GetServices();
+
 			Thread.Sleep(1500);
 			Debug($"leaving run-runner");
 			Environment.Exit(0);

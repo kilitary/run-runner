@@ -38,7 +38,7 @@
 			this.centerText.CausesValidation = false;
 			this.centerText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.centerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.Gray;
 			this.centerText.Location = new System.Drawing.Point(0, 0);
 			this.centerText.Name = "centerText";
