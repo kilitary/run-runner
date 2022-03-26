@@ -11,3 +11,6 @@ dotnet_diagnostic.CS8604.severity = none
 
 # IDE0005: Using directive is unnecessary.
 dotnet_diagnostic.IDE0005.severity = none
+
+# SYSLIB0023: Type or member is obsolete
+dotnet_diagnostic.SYSLIB0023.severity = none

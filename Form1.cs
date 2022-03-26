@@ -5,14 +5,16 @@ using static run_runner.Utils;
 
 namespace run_runner
 {
-	
+
 	public partial class Form1 : Form
 	{
+		
+
 		public Form1()
 		{
 			InitializeComponent();
 
-			centerText.Text = $"Starting up {run_runner.Program.programName} ...";
+			
 
 			ProcessStartInfo start = new ProcessStartInfo();
 			string[] newargs = new string[25];
