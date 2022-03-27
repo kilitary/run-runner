@@ -4,22 +4,24 @@ namespace run_runner
 {
 	internal static class Program
 	{
-		public static Form1? pForm;
-		public static string? programName;
-		public static string[]? argsOriginal;
+		public static Form1? PForm;
+		public static string? ProgramName;
+		public static string[]? ArgsOriginal;
+
 		[STAThread]
 		static void Main(string[] args)
 		{
 			if(args.Length > 0)
 			{
-				programName = args[0];
-				Debug($"starting {programName}");
+				ProgramName = args[0];
+				Debug($"starting {ProgramName}");
 			}
-			argsOriginal = args;
+
+			ArgsOriginal = args;
 			ApplicationConfiguration.Initialize();
-			pForm = new Form1();
-			pForm.centerText.Text = "Watching system ...";
-			Application.Run(pForm);
+			PForm = new Form1();
+			PForm.centerText.Text = "Watching system ...";
+			Application.Run(PForm);
 		}
 	}
 }

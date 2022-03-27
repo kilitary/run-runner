@@ -13,10 +13,10 @@ namespace run_runner
 
 			ProcessStartInfo start = new ProcessStartInfo();
 			string[] newargs = new string[25];
-			if(Program.argsOriginal.Length > 0)
+			if(Program.ArgsOriginal.Length > 0)
 			{
-				Array.ConstrainedCopy(Program.argsOriginal, 1, newargs, 0, Program.argsOriginal.Length - 1);
-				start.FileName = Program.programName;
+				Array.ConstrainedCopy(Program.ArgsOriginal, 1, newargs, 0, Program.ArgsOriginal.Length - 1);
+				start.FileName = Program.ProgramName;
 				start.WindowStyle = ProcessWindowStyle.Normal;
 				start.Arguments = String.Join(" ", newargs);
 				Process proc = Process.Start(start);

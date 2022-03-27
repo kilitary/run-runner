@@ -1,44 +1,47 @@
 ﻿using System.Diagnostics;
 using static run_runner.Utils;
 
-public static class ProcessExtensions
+namespace run_runner
 {
-	private static string FindIndexedProcessName(int pid)
+	public static class ProcessExtensions
 	{
-		var processName = Process.GetProcessById(pid).ProcessName;
-		var processesByName = Process.GetProcessesByName(processName);
-		string processIndexdName = null;
-
-		for(var index = 0; index < processesByName.Length; index++)
+		private static string FindIndexedProcessName(int pid)
 		{
-			processIndexdName = index == 0 ? processName : processName + "#" + index;
-			var processId = new PerformanceCounter("Process", "ID Process", processIndexdName);
-			if((int) processId.NextValue() == pid)
+			var processName = Process.GetProcessById(pid).ProcessName;
+			var processesByName = Process.GetProcessesByName(processName);
+			string processIndexdName = null;
+
+			for(var index = 0; index < processesByName.Length; index++)
 			{
-				return processIndexdName;
+				processIndexdName = index == 0 ? processName : processName + "#" + index;
+				var processId = new PerformanceCounter("Process", "ID Process", processIndexdName);
+				if((int) processId.NextValue() == pid)
+				{
+					return processIndexdName;
+				}
 			}
+
+			return processIndexdName;
 		}
 
-		return processIndexdName;
-	}
-
-	private static Process FindPidFromIndexedProcessName(string indexedProcessName)
-	{
-		var parentId = new PerformanceCounter("Process", "Creating Process ID", indexedProcessName);
-		return Process.GetProcessById((int) parentId.NextValue());
-	}
-
-	public static Process Parent(this Process process)
-	{
-		try
+		private static Process FindPidFromIndexedProcessName(string indexedProcessName)
 		{
-			return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
-		}
-		catch(Exception e)
-		{
-			Debug($"catched excp {e}");
+			var parentId = new PerformanceCounter("Process", "Creating Process ID", indexedProcessName);
+			return Process.GetProcessById((int) parentId.NextValue());
 		}
 
-		return null;
+		public static Process Parent(this Process process)
+		{
+			try
+			{
+				return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
+			}
+			catch(Exception e)
+			{
+				Debug($"catched excp {e}");
+			}
+
+			return null;
+		}
 	}
 }
