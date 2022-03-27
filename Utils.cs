@@ -70,7 +70,7 @@ namespace run_runner
 
 		public static void Debug(string msg)
 		{
-			OutputDebugString($"run-runner {msg}");
+			OutputDebugString($"#run-runner {msg}");
 		}
 
 		public static string Jsonify(object obj, bool indent = false)

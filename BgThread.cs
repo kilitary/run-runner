@@ -93,15 +93,14 @@ namespace run_runner
 							Debug($"msg: {ele.Message}");
 					}*/
 			}
-			
-			string temps = "";
-            int till = 40;
+
+			int till = 40;
 			while(till > 0)
 			{
 				if(ServicesStarting.Length > 0)
 				{
-					temps = "services: " + string.Join(",", ServicesStarting);
-					Debug($"temps:{temps} count: {ServicesStarting.Length}");
+					string allServices = "services: " + string.Join(",", ServicesStarting);
+					Debug($"temps:{allServices} count: {ServicesStarting.Length}");
 				}
 
 				Program.pForm.Invoke((MethodInvoker) (() =>
@@ -139,70 +138,51 @@ namespace run_runner
 		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
 
 			int i = 0;
-            string currentProcessName = "<scanning>";
-            int cycleD = 0;
-            
+			string currentProcessName = "<scanning>";
+			int cycleD = 0;
+
+			var procs = Process.GetProcessesByName("explorer");
+			servicesPid = procs[0].Id;
+			Debug($"found services: {servicesPid}");
+
 			while(Run)
 			{
-                if(GetTimestamp() >= emptyTimeSeconds + 1)
-				{
-					Program.pForm.Invoke((MethodInvoker) (() =>
-					{
-						Program.pForm.Visible = false;
-					}));
-				}
+				if(GetTimestamp() >= emptyTimeSeconds - 1)
+					Program.pForm.Invoke((MethodInvoker) (() => { Program.pForm.Visible = false; }));
+				else
+					Program.pForm.Invoke((MethodInvoker) (() => { Program.pForm.Visible = true; }));
 
-				if(currentProcessName.Length > 0)
-				{
-					if(cycleD >= Cyclers.Length)
-						cycleD = 0;
-					Cycler = Cyclers[cycleD++];
-
-                    var name = currentProcessName;
-                    Program.pForm.Invoke((MethodInvoker) (() =>
-					{
-						Program.pForm.Visible = true;
-                        Program.pForm.centerText.Text = $"{name} {Cycler}";
-					}));
-				}
-
-                //currentProcessName = "";
 				foreach(Process p in Process.GetProcesses())
 				{
-
-
-					if(servicesPid == 0 && p.ProcessName.Contains("services", StringComparison.OrdinalIgnoreCase))
-					{
-						servicesPid = p.Id;
-						Debug($"found services: {servicesPid}");
-					}
-
 					if(p.Parent()?.Id == servicesPid)
 					{
+						if(cycleD >= Cyclers.Length)
+							cycleD = 0;
+						Cycler = Cyclers[cycleD++];
+
+						Program.pForm.Invoke((MethodInvoker) (() => { Program.pForm.centerText.Text = $"{currentProcessName} {Cycler}"; }));
+
 						if(KnownPids.Contains(p.Id))
 							continue;
-                        else
-                        {
-                            KnownPids.Add(p.Id);
-							Debug($"added {p.Id}");
-                        }
-
-                        currentProcessName = p.ProcessName;
-						Program.pForm.centerText.Invoke((MethodInvoker) (() =>
+						else
 						{
-							Program.pForm.Visible = true;
-						}));
+							KnownPids.Add(p.Id);
+							Debug($"added {p.Id}");
+							emptyTimeSeconds = GetTimestamp();
+							currentProcessName = $"#{p.Id} {p.ProcessName}";
+							Program.pForm.centerText.Invoke((MethodInvoker) (() => { Program.pForm.Visible = true; }));
+						}
 					}
-                    else
-                    {
-                        emptyTimeSeconds = GetTimestamp();
 
-                    }
+					Thread.Sleep(55);
 
-					//Debug($"{p.ProcessName}")
+					/*if(currentProcessName.Length == 0)
+						continue;*/
+
+
 				}
 
-                Thread.Sleep(350);
+				Thread.Sleep(150);
 			}
 
 			Debug("leaving Run-runner");

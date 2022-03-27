@@ -38,9 +38,9 @@ namespace run_runner
 			// 
 			this.centerText.BackColor = System.Drawing.Color.Black;
 			this.centerText.CausesValidation = false;
-			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.Font = new System.Drawing.Font("Source Code Pro", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.DarkOrange;
-			this.centerText.Location = new System.Drawing.Point(110, 34);
+			this.centerText.Location = new System.Drawing.Point(110, 35);
 			this.centerText.Name = "centerText";
 			this.centerText.Size = new System.Drawing.Size(386, 22);
 			this.centerText.TabIndex = 0;
@@ -57,7 +57,7 @@ namespace run_runner
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(81, 19);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Running:";
+			this.label1.Text = "Booting:";
 			// 
 			// Form1
 			// 
