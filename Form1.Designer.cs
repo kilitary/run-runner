@@ -1,11 +1,13 @@
-﻿namespace run_runner
+﻿using System.ComponentModel;
+
+namespace run_runner
 {
 	partial class Form1
 	{
 		/// <summary>
 		///  Required designer variable.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private IContainer components = null;
 
 		/// <summary>
 		///  Clean up any resources being used.

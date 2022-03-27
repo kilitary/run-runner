@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using static Vanara.PInvoke.Kernel32;
 
@@ -60,7 +53,7 @@ namespace run_runner
 				{
 					// Handle the error.
 					int le = Marshal.GetLastWin32Error();
-					return "Unable to get error code string from System - Error " + le.ToString();
+					return "Unable to get error code string from System - Error " + le;
 				}
 
 				string sRet = Marshal.PtrToStringAnsi(lpMsgBuf);
@@ -71,26 +64,25 @@ namespace run_runner
 			}
 			catch(Exception e)
 			{
-				return "Unable to get error code string from System -> " + e.ToString();
+				return "Unable to get error code string from System -> " + e;
 			}
 		}
 
 		public static void Debug(string msg)
 		{
-			OutputDebugString($"#run-runner {msg}");
+			OutputDebugString($"run-runner {msg}");
 		}
 
 		public static string Jsonify(object obj, bool indent = false)
-		{
-			if(indent)
-				return JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
-			else
-				return JsonConvert.SerializeObject(obj);
-		}
+        {
+            if(indent)
+				return JsonConvert.SerializeObject(obj, Formatting.Indented);
+            return JsonConvert.SerializeObject(obj);
+        }
 
 		public static long GetTimestamp()
 		{
-			DateTimeOffset now = (DateTimeOffset) DateTime.UtcNow;
+			DateTimeOffset now = DateTime.UtcNow;
 			return now.ToUnixTimeSeconds();
 		}
 	}

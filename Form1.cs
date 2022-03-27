@@ -1,7 +1,4 @@
 using System.Diagnostics;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using static run_runner.Utils;
 
 namespace run_runner
 {
@@ -16,16 +13,16 @@ namespace run_runner
 
 			ProcessStartInfo start = new ProcessStartInfo();
 			string[] newargs = new string[25];
-			if(run_runner.Program.argsOriginal.Length > 0)
+			if(Program.argsOriginal.Length > 0)
 			{
-				Array.ConstrainedCopy(run_runner.Program.argsOriginal, 1, newargs, 0, run_runner.Program.argsOriginal.Length - 1);
-				start.FileName = run_runner.Program.programName;
+				Array.ConstrainedCopy(Program.argsOriginal, 1, newargs, 0, Program.argsOriginal.Length - 1);
+				start.FileName = Program.programName;
 				start.WindowStyle = ProcessWindowStyle.Normal;
 				start.Arguments = String.Join(" ", newargs);
 				Process proc = Process.Start(start);
 			}
 
-			Thread thread1 = new Thread(run_runner.ThreadWork.DoWork);
+			Thread thread1 = new Thread(ThreadWork.DoWork);
 			thread1.Start();
 		}
 
