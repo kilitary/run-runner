@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.ServiceProcess;
 using Newtonsoft.Json.Linq;
 using static run_runner.Utils;
@@ -16,6 +17,10 @@ namespace run_runner
 		public static int CycleD = 0;
 		public static long LastInvoked = 999999999999999999;
 		public static long LastShift = GetTimestamp();
+		public static int ExplorerPid = 0, ServicesPid = 0;
+		public static Process[]? Procs;
+		public static int ProcessId = 0;
+		public static bool Done = false;
 		public enum SimpleServiceCustomCommands
 		{ StopWorker = 128, RestartWorker, CheckWorker }
 
@@ -117,7 +122,7 @@ namespace run_runner
 
 			Thread.Sleep(66);
 
-			int servicesPid = 0;
+
 
 			/*♡
 	░ ♡ ▄▀▀▀▄░░♡░
@@ -137,39 +142,38 @@ namespace run_runner
 			int i = 0;
 
 
-			var procs = Process.GetProcessesByName("services");
-			servicesPid = procs[0].Id;
+			Procs = Process.GetProcessesByName("services");
+			ServicesPid = Procs[0].Id;
+			Procs = Process.GetProcessesByName("explorer");
+			ExplorerPid = Procs[0].Id;
 
-			int explorerPid = 0;
-			procs = Process.GetProcessesByName("explorer");
-			explorerPid = procs[0].Id;
-
-			Debug($"found services: {servicesPid} explorer: {explorerPid}");
-			var pId = 0;
+			Debug($"found services: {ServicesPid} explorer: {ExplorerPid}");
+			ProcessId = 0;
 
 			// collect existent 
 			foreach(Process p in Process.GetProcesses())
-                BeforePids.Add(p.Id);
+				BeforePids.Add(p.Id);
 
-			Debug($"collected {BeforePids.Count} pids");
+            Debug($"collected {BeforePids.Count} pids");
 
 			while(Run)
 			{
-				if(Stopwatch.GetTimestamp() - LastShift >= 50)
+				if(Stopwatch.GetTimestamp() - LastShift >= 2211250)
 					Draw();
 
-				if(GetTimestamp() - LastInvoked > 3)
+				if(GetTimestamp() - LastInvoked > 7)
 				{
 					Program.PForm.Invoke((MethodInvoker) (() =>
 					{
 						CurrentProcessName = $" done √";
+						Done = true;
 						Program.PForm.Visible = true;
 						Draw();
 					}));
 
 				}
 
-				if(GetTimestamp() - LastInvoked > 6)
+				if(GetTimestamp() - LastInvoked > 10)
 					Run = false;
 
 				foreach(Process p in Process.GetProcesses())
@@ -177,14 +181,14 @@ namespace run_runner
 					try
 					{
 						var parentProcess = ParentProcess.GetParentProcess(p.Id);
-						pId = parentProcess.Id;
+						ProcessId = parentProcess.Id;
 					}
 					catch(Exception e)
 					{
 						Debug($"error listing for {p.Id}: {e.Message}");
 					}
 
-					if(pId == servicesPid || pId == explorerPid)
+					if(ProcessId == ServicesPid || ProcessId == ExplorerPid)
 					{
 						if(BeforePids.Contains(p.Id))
 							continue;
@@ -196,12 +200,13 @@ namespace run_runner
 						LastInvoked = GetTimestamp();
 						CurrentProcessName = $"{p.ProcessName} #{p.Id}";
 
-						
-						Thread.Sleep(40);
+
+						Thread.Sleep(440);
 					}
 
-                    Draw();
-                }
+                    Thread.Sleep(10);
+					Draw();
+				}
 
 				Thread.Sleep(250);
 			}
@@ -215,6 +220,9 @@ namespace run_runner
 			if(CycleD >= Cyclers.Length)
 				CycleD = 0;
 			Cycler = Cyclers[CycleD++];
+
+			if(Done)
+				Cycler = "";
 
 			Program.PForm.Invoke((MethodInvoker) (() =>
 			{
