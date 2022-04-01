@@ -11,11 +11,11 @@ namespace run_runner
 		public static string Cycler = " ";
 		public static string[] ServicesStarting = new string[1];
 		public static bool Run = true;
-		public static List<int> beforePids = new List<int>();
-		public static string currentProcessName = "<scanning>";
-		public static int cycleD = 0;
-		public static long lastInvoked = 999999999999999999;
-		public static long lastShift = GetTimestamp();
+		public static List<int> BeforePids = new List<int>();
+		public static string CurrentProcessName = "<scanning>";
+		public static int CycleD = 0;
+		public static long LastInvoked = 999999999999999999;
+		public static long LastShift = GetTimestamp();
 		public enum SimpleServiceCustomCommands
 		{ StopWorker = 128, RestartWorker, CheckWorker }
 
@@ -147,27 +147,30 @@ namespace run_runner
 			Debug($"found services: {servicesPid} explorer: {explorerPid}");
 			var pId = 0;
 
+			// collect existent 
+			foreach(Process p in Process.GetProcesses())
+                BeforePids.Add(p.Id);
+
+			Debug($"collected {BeforePids.Count} pids");
+
 			while(Run)
 			{
-				if(GetTimestamp() - lastShift >= 1)
-				{
+				if(Stopwatch.GetTimestamp() - LastShift >= 50)
 					Draw();
-				}
 
-				if(GetTimestamp() - lastInvoked > 4)
+				if(GetTimestamp() - LastInvoked > 3)
 				{
 					Program.PForm.Invoke((MethodInvoker) (() =>
 					{
-                        currentProcessName = $" √";
+						CurrentProcessName = $" done √";
 						Program.PForm.Visible = true;
 						Draw();
 					}));
 
 				}
-				if(GetTimestamp() - lastInvoked > 10)
-				{
+
+				if(GetTimestamp() - LastInvoked > 6)
 					Run = false;
-				}
 
 				foreach(Process p in Process.GetProcesses())
 				{
@@ -183,23 +186,23 @@ namespace run_runner
 
 					if(pId == servicesPid || pId == explorerPid)
 					{
-						if(beforePids.Contains(p.Id))
+						if(BeforePids.Contains(p.Id))
 							continue;
 
-						beforePids.Add(p.Id);
+						BeforePids.Add(p.Id);
 
-						Debug($"added {p.Id} ({p.ProcessName}), total {beforePids.Count}");
+						Debug($"added {p.Id} ({p.ProcessName}), total {BeforePids.Count}");
 
-						lastInvoked = GetTimestamp();
-						currentProcessName = $"{p.ProcessName} #{p.Id}";
+						LastInvoked = GetTimestamp();
+						CurrentProcessName = $"{p.ProcessName} #{p.Id}";
 
-						Draw();
-
-						Thread.Sleep(100);
+						
+						Thread.Sleep(40);
 					}
-				}
 
-                currentProcessName = $" <analyzing>";
+                    Draw();
+                }
+
 				Thread.Sleep(250);
 			}
 
@@ -209,18 +212,17 @@ namespace run_runner
 
 		public static void Draw()
 		{
-			if(cycleD >= Cyclers.Length)
-				cycleD = 0;
-			Cycler = Cyclers[cycleD++];
+			if(CycleD >= Cyclers.Length)
+				CycleD = 0;
+			Cycler = Cyclers[CycleD++];
 
 			Program.PForm.Invoke((MethodInvoker) (() =>
 			{
-				Program.PForm.centerText.Text = $"{currentProcessName} {Cycler}";
+				Program.PForm.centerText.Text = $"{CurrentProcessName} {Cycler}";
 				Program.PForm.Visible = true;
 			}));
 
-			lastShift = GetTimestamp();
-			Debug("draw");
+			LastShift = Stopwatch.GetTimestamp();
 		}
 	}
 }
