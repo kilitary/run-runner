@@ -1,17 +1,21 @@
 ﻿using System.Diagnostics;
 using System.ServiceProcess;
+using Newtonsoft.Json.Linq;
 using static run_runner.Utils;
 
 namespace run_runner
 {
 	public class ThreadWork
 	{
-		public static string[] Cyclers = { "/", "|", "\\", "-" };
+		public static string[] Cyclers = { "|", "/", "-", "\\" };
 		public static string Cycler = " ";
 		public static string[] ServicesStarting = new string[1];
 		public static bool Run = true;
-		public static List<int> KnownPids = new List<int>();
-
+		public static List<int> beforePids = new List<int>();
+		public static string currentProcessName = "<scanning>";
+		public static int cycleD = 0;
+		public static long lastInvoked = 999999999999999999;
+		public static long lastShift = GetTimestamp();
 		public enum SimpleServiceCustomCommands
 		{ StopWorker = 128, RestartWorker, CheckWorker }
 
@@ -111,10 +115,9 @@ namespace run_runner
 
 			Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.centerText.Text = $"{Program.ProgramName} √"; }));
 
-			Thread.Sleep(266);
+			Thread.Sleep(66);
 
 			int servicesPid = 0;
-			long emptyTimeSeconds = 0;
 
 			/*♡
 	░ ♡ ▄▀▀▀▄░░♡░
@@ -132,8 +135,7 @@ namespace run_runner
 		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
 
 			int i = 0;
-			string currentProcessName = "<scanning>";
-			int cycleD = 0;
+
 
 			var procs = Process.GetProcessesByName("services");
 			servicesPid = procs[0].Id;
@@ -142,50 +144,83 @@ namespace run_runner
 			procs = Process.GetProcessesByName("explorer");
 			explorerPid = procs[0].Id;
 
-			Debug($"found services: {servicesPid}");
+			Debug($"found services: {servicesPid} explorer: {explorerPid}");
+			var pId = 0;
 
 			while(Run)
 			{
-				if(GetTimestamp() - emptyTimeSeconds >= 3)
-					Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.Visible = false; }));
-				else
-					Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.Visible = true; }));
+				if(GetTimestamp() - lastShift >= 1)
+				{
+					Draw();
+				}
+
+				if(GetTimestamp() - lastInvoked > 4)
+				{
+					Program.PForm.Invoke((MethodInvoker) (() =>
+					{
+                        currentProcessName = $" √";
+						Program.PForm.Visible = true;
+						Draw();
+					}));
+
+				}
+				if(GetTimestamp() - lastInvoked > 10)
+				{
+					Run = false;
+				}
 
 				foreach(Process p in Process.GetProcesses())
 				{
-					if(p.Parent()?.Id == servicesPid || p.Parent()?.Id == explorerPid)
+					try
 					{
-						if(cycleD >= Cyclers.Length)
-							cycleD = 0;
-						Cycler = Cyclers[cycleD++];
-
-						Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.centerText.Text = $"{currentProcessName} {Cycler}"; }));
-
-						if(KnownPids.Contains(p.Id))
-							continue;
-						else
-						{
-							KnownPids.Add(p.Id);
-							Debug($"added {p.Id}");
-							emptyTimeSeconds = GetTimestamp();
-							currentProcessName = $"#{p.Id} {p.ProcessName}";
-							Program.PForm.centerText.Invoke((MethodInvoker) (() => { Program.PForm.Visible = true; }));
-						}
+						var parentProcess = ParentProcess.GetParentProcess(p.Id);
+						pId = parentProcess.Id;
+					}
+					catch(Exception e)
+					{
+						Debug($"error listing for {p.Id}: {e.Message}");
 					}
 
-					Thread.Sleep(55);
+					if(pId == servicesPid || pId == explorerPid)
+					{
+						if(beforePids.Contains(p.Id))
+							continue;
 
-					/*if(currentProcessName.Length == 0)
-						continue;*/
+						beforePids.Add(p.Id);
 
+						Debug($"added {p.Id} ({p.ProcessName}), total {beforePids.Count}");
 
+						lastInvoked = GetTimestamp();
+						currentProcessName = $"{p.ProcessName} #{p.Id}";
+
+						Draw();
+
+						Thread.Sleep(100);
+					}
 				}
 
-				Thread.Sleep(50);
+                currentProcessName = $" <analyzing>";
+				Thread.Sleep(250);
 			}
 
 			Debug("leaving Run-runner");
 			Environment.Exit(0);
+		}
+
+		public static void Draw()
+		{
+			if(cycleD >= Cyclers.Length)
+				cycleD = 0;
+			Cycler = Cyclers[cycleD++];
+
+			Program.PForm.Invoke((MethodInvoker) (() =>
+			{
+				Program.PForm.centerText.Text = $"{currentProcessName} {Cycler}";
+				Program.PForm.Visible = true;
+			}));
+
+			lastShift = GetTimestamp();
+			Debug("draw");
 		}
 	}
 }

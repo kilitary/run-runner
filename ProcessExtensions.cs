@@ -32,16 +32,8 @@ namespace run_runner
 
 		public static Process Parent(this Process process)
 		{
-			try
-			{
-				return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
-			}
-			catch(Exception e)
-			{
-				Debug($"catched excp {e}");
-			}
+			return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
 
-			return null;
 		}
 	}
 }
