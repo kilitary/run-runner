@@ -1,6 +1,6 @@
 # run-runner
 
-This program shows real-time status of autorun programs & services right after user has loggin.
+This program shows real-time status of autorun programs & services right after user has login.
 
 ![This is an image](https://raw.githubusercontent.com/kilitary/run-runner/master/Resources/screen2.png)
 
