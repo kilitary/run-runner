@@ -36,7 +36,7 @@ namespace run_runner
 				: "Operations timed using the DateTime class.");
 
 			StartTime = GetTimestamp();
-			LastDraw = Stopwatch.GetTimestamp();
+			LastDraw = Stopwatch.GetTimestamp() - 1;
 
 			/*
 			 ♡
@@ -56,6 +56,7 @@ namespace run_runner
 			*/
 
 			CurrentProcessName = "scanning processes";
+            Draw();
 			// collect existent 
 			foreach(Process p in Process.GetProcesses())
 				BeforePids.Add(p.Id);
@@ -85,7 +86,7 @@ namespace run_runner
 			ProcessId = 0;
 
 			LastWaker = GetTimestamp() + 10;
-			CurrentProcessName = $"up: {GetSystemUpTimeInfo()} analyzing";
+			CurrentProcessName = $"observing system";
 
 			while(Run)
 			{
@@ -119,7 +120,7 @@ namespace run_runner
 				}
 
 
-				if(GetTimestamp() - LastWaker > 7)
+				if(GetTimestamp() - LastWaker > 6)
 					Run = false;
 
 				foreach(Process p in Process.GetProcesses())
