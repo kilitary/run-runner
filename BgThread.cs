@@ -11,8 +11,8 @@ namespace run_runner
 		public static string[] Cyclers = { "|", "/", "-", "\\" };
 		public static string Cycler = " ";
 		public static string[]? ServicesStarting;
-		public static bool Run = true;
-		public static List<int> BeforePids = new List<int>();
+		public static volatile bool Run = true;
+		public static HashSet<int> BeforePids = new HashSet<int>();
 		public static string CurrentProcessName = "<scanning>";
 		public static int CycleD = 0;
 		public static long LastWaker = 0;
