@@ -56,11 +56,6 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.2-mauipre.1.22102.15" />
-    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.4.0" />
-    <PackageReference Include="Vanara.PInvoke.NetApi32" Version="3.4.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.0" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.0" />
-    <PackageReference Include="Vanara.Windows.Shell" Version="3.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

@@ -60,7 +60,7 @@ namespace run_runner
 			Debug($"found services: {ServicesPid} explorer: {ExplorerPid}");
 			ProcessId = 0;
 
-            LastWaker = GetTimestamp() - 2;
+            LastWaker = GetTimestamp() + 10;
 
 			while(Run)
             {
@@ -137,7 +137,7 @@ namespace run_runner
 						//Thread.Sleep(40);
 					}
 
-					//Thread.Sleep(10);
+					Thread.Sleep(5);
 					Draw();
 				}
 

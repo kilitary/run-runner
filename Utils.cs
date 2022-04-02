@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using Newtonsoft.Json;
-using static Vanara.PInvoke.Kernel32;
 
 namespace run_runner
 {
@@ -70,15 +69,15 @@ namespace run_runner
 
 		public static void Debug(string msg)
 		{
-			OutputDebugString($"#run-runner {msg}");
+			OutputDebugStringA($"#run-runner {msg}");
 		}
-
+/*
 		public static string Jsonify(object obj, bool indent = false)
         {
             if(indent)
 				return JsonConvert.SerializeObject(obj, Formatting.Indented);
             return JsonConvert.SerializeObject(obj);
-        }
+        }*/
 
 		public static long GetTimestamp()
 		{
