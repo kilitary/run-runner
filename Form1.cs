@@ -38,5 +38,10 @@ namespace run_runner
 		{
 			Environment.Exit(0);
 		}
+
+		private void label2_Click(object sender, EventArgs e)
+		{
+            Environment.Exit(0);
+		}
 	}
 }
