@@ -22,6 +22,9 @@ namespace run_runner
 				Process proc = Process.Start(start);
 			}
 
+            this.ShowInTaskbar = false;
+            this.TopMost = true;
+
 			Thread thread1 = new Thread(ThreadWork.DoWork);
 			thread1.Start();
 		}

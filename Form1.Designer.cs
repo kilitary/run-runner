@@ -38,9 +38,9 @@ namespace run_runner
 			// 
 			this.centerText.BackColor = System.Drawing.Color.Black;
 			this.centerText.CausesValidation = false;
-			this.centerText.Font = new System.Drawing.Font("Liberation Mono", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.DarkOrange;
-			this.centerText.Location = new System.Drawing.Point(110, 23);
+			this.centerText.Location = new System.Drawing.Point(110, 14);
 			this.centerText.Name = "centerText";
 			this.centerText.Size = new System.Drawing.Size(472, 22);
 			this.centerText.TabIndex = 0;
@@ -52,19 +52,19 @@ namespace run_runner
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Source Code Pro", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.label1.Location = new System.Drawing.Point(12, 23);
+			this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label1.Location = new System.Drawing.Point(12, 16);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(81, 19);
+			this.label1.Size = new System.Drawing.Size(72, 19);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Booting:";
+			this.label1.Text = "BOOTING";
 			// 
 			// Form1
 			// 
 			this.AutoSize = true;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
 			this.BackgroundImage = global::run_runner.Properties.Resources.E2ABOCSWYAAnMiy;
-			this.ClientSize = new System.Drawing.Size(610, 64);
+			this.ClientSize = new System.Drawing.Size(610, 50);
 			this.Controls.Add(this.centerText);
 			this.Controls.Add(this.label1);
 			this.Cursor = System.Windows.Forms.Cursors.Hand;

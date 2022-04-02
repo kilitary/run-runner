@@ -10,13 +10,15 @@ namespace run_runner
 	{
 		public static string[] Cyclers = { "|", "/", "-", "\\" };
 		public static string Cycler = " ";
-		public static string[] ServicesStarting = new string[1];
+		public static string[]? ServicesStarting;
 		public static bool Run = true;
 		public static List<int> BeforePids = new List<int>();
 		public static string CurrentProcessName = "<scanning>";
 		public static int CycleD = 0;
-		public static long LastInvoked = 999999999999999999;
-		public static long LastShift = GetTimestamp();
+		public static long LastWaker = 0;
+		public static long ProgramTimeLeft = 0;
+		public static long LastDraw = Stopwatch.GetTimestamp();
+		public static ServiceController[]? ScServices;
 		public static int ExplorerPid = 0, ServicesPid = 0;
 		public static Process[]? Procs;
 		public static int ProcessId = 0;
@@ -26,103 +28,6 @@ namespace run_runner
 
 		public static void DoWork()
 		{
-
-			ServiceController[] scServices = null;
-			scServices = ServiceController.GetServices();
-
-			foreach(ServiceController scTemp in scServices)
-			{
-
-				// Display properties for the Simple Service sample
-				// from the ServiceBase example.
-				ServiceController sc = new ServiceController(scTemp.ServiceName);
-				/*Debug($"{scTemp.ServiceName} Status = " + sc.Status);
-				Debug($"{scTemp.ServiceName} Can Pause and Continue = " + sc.CanPauseAndContinue);
-				Debug($"{scTemp.ServiceName} Can ShutDown = " + sc.CanShutdown);
-				Debug($"{scTemp.ServiceName} Can Stop = " + sc.CanStop);*/
-				/*if(sc.Status == ServiceControllerStatus.Stopped)
-				{
-					sc.Start();
-					while(sc.Status == ServiceControllerStatus.Stopped)
-					{
-						Thread.Sleep(1000);
-						sc.Refresh();
-					}
-				}*/
-
-				if(sc.Status == ServiceControllerStatus.StartPending || sc.Status == ServiceControllerStatus.StopPending)
-				{
-					Debug($"service {scTemp.ServiceName} шевелица ({sc.Status})");
-					ServicesStarting.Append(sc.DisplayName.Trim());
-
-				}
-
-				/*// Issue custom commands to the service
-				// enum SimpleServiceCustomCommands
-				//    { StopWorker = 128, RestartWorker, CheckWorker };
-				sc.ExecuteCommand((int) SimpleServiceCustomCommands.StopWorker);
-				sc.ExecuteCommand((int) SimpleServiceCustomCommands.RestartWorker);
-				sc.Pause();
-				while(sc.Status != ServiceControllerStatus.Paused)
-				{
-					Thread.Sleep(1000);
-					sc.Refresh();
-				}
-				Debug("Status = " + sc.Status);
-				sc.Continue();
-				while(sc.Status == ServiceControllerStatus.Paused)
-				{
-					Thread.Sleep(1000);
-					sc.Refresh();
-				}
-				Debug("Status = " + sc.Status);
-				sc.Stop();
-				while(sc.Status != ServiceControllerStatus.Stopped)
-				{
-					Thread.Sleep(1000);
-					sc.Refresh();
-				}
-				Debug("Status = " + sc.Status);
-				String[] argArray = new string[] { "ServiceController arg1", "ServiceController arg2" };
-				sc.Start(argArray);
-				while(sc.Status == ServiceControllerStatus.Stopped)
-				{
-					Thread.Sleep(1000);
-					sc.Refresh();
-				}
-				Debug("Status = " + sc.Status);*/
-				// Display the event log entries for the custom commands
-				// and the start arguments.
-				/*	EventLog el = new EventLog("Application");
-					EventLogEntryCollection elec = el.Entries;
-					foreach(EventLogEntry ele in elec)
-					{
-						if(ele.Source.IndexOf("SimpleService.OnCustomCommand") >= 0 |
-							ele.Source.IndexOf("SimpleService.Arguments") >= 0)
-							Debug($"msg: {ele.Message}");
-					}*/
-			}
-
-			int till = 40;
-			while(till > 0)
-			{
-				if(ServicesStarting.Length > 0)
-				{
-					string allServices = "services: " + string.Join(",", ServicesStarting);
-					Debug($"temps:{allServices} count: {ServicesStarting.Length}");
-				}
-
-				Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.centerText.Text = $"{Program.ProgramName} {Cycler}"; }));
-
-				Thread.Sleep(20);
-				till -= 1;
-			}
-
-			Program.PForm.Invoke((MethodInvoker) (() => { Program.PForm.centerText.Text = $"{Program.ProgramName} √"; }));
-
-			Thread.Sleep(66);
-
-
 
 			/*♡
 	░ ♡ ▄▀▀▀▄░░♡░
@@ -139,8 +44,13 @@ namespace run_runner
 		░░░░░░░░░░░▌▌░▌▌░░░░░
 		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
 
-			int i = 0;
+            // collect existent 
+            foreach (Process p in Process.GetProcesses())
+                BeforePids.Add(p.Id);
 
+            Debug($"collected {BeforePids.Count} pids");
+
+			int i = 0;
 
 			Procs = Process.GetProcessesByName("services");
 			ServicesPid = Procs[0].Id;
@@ -150,32 +60,53 @@ namespace run_runner
 			Debug($"found services: {ServicesPid} explorer: {ExplorerPid}");
 			ProcessId = 0;
 
-			// collect existent 
-			foreach(Process p in Process.GetProcesses())
-				BeforePids.Add(p.Id);
-
-            Debug($"collected {BeforePids.Count} pids");
+            LastWaker = GetTimestamp() - 2;
 
 			while(Run)
-			{
-				if(Stopwatch.GetTimestamp() - LastShift >= 2211250)
-					Draw();
+            {
+                Draw();
 
-				if(GetTimestamp() - LastInvoked > 7)
+				/*ScServices = ServiceController.GetServices();
+
+				//Debug($"got {ScServices.Length} services");
+
+				foreach(ServiceController scService in ScServices)
 				{
-					Program.PForm.Invoke((MethodInvoker) (() =>
+					ServiceController sc = new ServiceController(scService.ServiceName);
+					//Debug($"checking service {sc.ServiceName}");
+					switch(sc.Status)
 					{
-						CurrentProcessName = $" done √";
-						Done = true;
-						Program.PForm.Visible = true;
-						Draw();
-					}));
+						case ServiceControllerStatus.StartPending:
+						case ServiceControllerStatus.StopPending:
+						case ServiceControllerStatus.ContinuePending:
+						case ServiceControllerStatus.PausePending:
+							Debug($"service {scService.ServiceName} шевелица ({sc.Status})");
+							//ServicesStarting.Append(sc.DisplayName.Trim());
+							CurrentProcessName = $"<service> {scService.ServiceName}";
 
+							break;
+						default:
+							Debug($"service state: {sc.Status}");
+							break;
+					}
+				}*/
+
+				if(GetTimestamp() - LastWaker > 9)
+				{
+					CurrentProcessName = $" done √ ";
+					Done = true;
 				}
 
-				if(GetTimestamp() - LastInvoked > 10)
+				if(GetTimestamp() - LastWaker > 11)
 					Run = false;
 
+				/*if(GetTimestamp() - ProgramTimeLeft >= 2 && GetTimestamp() - LastWaker > 5)
+				{
+					CurrentProcessName = $"<scanning>";
+					ProgramTimeLeft = GetTimestamp();
+
+				}
+*/
 				foreach(Process p in Process.GetProcesses())
 				{
 					try
@@ -183,6 +114,7 @@ namespace run_runner
 						var parentProcess = ParentProcess.GetParentProcess(p.Id);
 						ProcessId = parentProcess.Id;
 					}
+
 					catch(Exception e)
 					{
 						Debug($"error listing for {p.Id}: {e.Message}");
@@ -195,20 +127,21 @@ namespace run_runner
 
 						BeforePids.Add(p.Id);
 
-						Debug($"added {p.Id} ({p.ProcessName}), total {BeforePids.Count}");
+						//Debug($"added {p.Id} ({p.ProcessName}), total {BeforePids.Count}");
 
-						LastInvoked = GetTimestamp();
-						CurrentProcessName = $"{p.ProcessName} #{p.Id}";
+						LastWaker = GetTimestamp();
+						CurrentProcessName = $"#{p.Id} {p.ProcessName}";
 
+						ProgramTimeLeft = GetTimestamp();
 
-						Thread.Sleep(440);
+						//Thread.Sleep(40);
 					}
 
-                    Thread.Sleep(10);
+					//Thread.Sleep(10);
 					Draw();
 				}
 
-				Thread.Sleep(250);
+				Thread.Sleep(5);
 			}
 
 			Debug("leaving Run-runner");
@@ -217,6 +150,9 @@ namespace run_runner
 
 		public static void Draw()
 		{
+			if(Stopwatch.GetTimestamp() - LastDraw <= 1000000)
+				return;
+
 			if(CycleD >= Cyclers.Length)
 				CycleD = 0;
 			Cycler = Cyclers[CycleD++];
@@ -226,11 +162,12 @@ namespace run_runner
 
 			Program.PForm.Invoke((MethodInvoker) (() =>
 			{
+				Program.PForm.BringToFront();
 				Program.PForm.centerText.Text = $"{CurrentProcessName} {Cycler}";
 				Program.PForm.Visible = true;
 			}));
 
-			LastShift = Stopwatch.GetTimestamp();
+			LastDraw = Stopwatch.GetTimestamp();
 		}
 	}
 }
