@@ -5,8 +5,9 @@ This program shows real-time status of autorun programs & services right after u
 ![This is an image](https://raw.githubusercontent.com/kilitary/run-runner/master/Resources/screen2.png)
 
 Prerequsites:
+
 Microsoft .NET 6.0
-[link](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.3-windows-x64-installer)
+[link to x64 istaller](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.3-windows-x64-installer)
 
 Installation:
 
