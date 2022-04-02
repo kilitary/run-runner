@@ -8,43 +8,54 @@ namespace run_runner
 {
 	public class ThreadWork
 	{
+		public static ServiceController[]? ScServices = null;
+		public static Process[]? Procs = null;
+		public static Dictionary<string, string> ServicesState = new();
+		public static HashSet<int> BeforePids = new();
 		public static string[] Cyclers = { "|", "/", "-", "\\" };
 		public static string Cycler = " ";
 		public static string[]? ServicesStarting;
-		public static volatile bool Run = true;
-		public static Dictionary<string, string> ServicesState = new Dictionary<string, string>(300);
-		public static HashSet<int> BeforePids = new HashSet<int>();
 		public static string CurrentProcessName = "<scanning>";
+		public static bool Run = true;
 		public static int CycleD = 0;
+		public static int ProcessId = 0;
+		public static int ExplorerPid = 0, ServicesPid = 0;
 		public static long LastWaker = 0;
 		public static long ProgramTimeLeft = 0;
-		public static long LastDraw = Stopwatch.GetTimestamp();
-		public static ServiceController[]? ScServices;
-		public static int ExplorerPid = 0, ServicesPid = 0;
-		public static Process[]? Procs;
-		public static int ProcessId = 0;
+		public static long LastDraw = 0;
+		public static long StartTime = 0;
+
 		public static bool Done = false;
 		public enum SimpleServiceCustomCommands
 		{ StopWorker = 128, RestartWorker, CheckWorker }
 
 		public static void DoWork()
 		{
+			Debug(Stopwatch.IsHighResolution
+				? "Operations timed using the system's high-resolution performance counter."
+				: "Operations timed using the DateTime class.");
 
-			/*♡
-	░ ♡ ▄▀▀▀▄░░♡░
-	 ▄███▀░◐░░░▌░░░░░░░
-		░░░░▌░░░░░▐░░░░░░░
-		░░░░▐░░░░░▐░░░░░░░
-		░░░░▌░░░░░▐▄▄░░░░░
-		░░░░▌░░░░▄▀▒▒▀▀▀▀▄
-		░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
-		░░░▐░░░░▐♡▄▒▒▒▒▒▒▒▒▒▀▄
-		░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
-		░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
-		░░░░░░░░░░░▌▌░▌▌░░░░░
-		░░░░░░░░░░░▌▌░▌▌░░░░░
-		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
+			StartTime = GetTimestamp();
+			LastDraw = Stopwatch.GetTimestamp();
 
+			/*
+			 ♡
+	        ░ ♡ ▄▀▀▀▄░░♡░
+	         ▄███▀░◐░░░▌░░░░░░░
+		        ░░░░▌░░░░░▐░░░░░░░
+		        ░░░░▐░░░░░▐░░░░░░░
+		        ░░░░▌░░░░░▐▄▄░░░░░
+		        ░░░░▌░░░░▄▀▒▒▀▀▀▀▄
+		        ░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
+		        ░░░▐░░░░▐♡▄▒▒▒▒▒▒▒▒▒▀▄
+		        ░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
+		        ░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
+		        ░░░░░░░░░░░▌▌░▌▌░░░░░
+		        ░░░░░░░░░░░▌▌░▌▌░░░░░
+		        ░░░░░░░░░▄▄▌▌▄▌▌░░░░░
+			*/
+
+			CurrentProcessName = "scanning processes";
 			// collect existent 
 			foreach(Process p in Process.GetProcesses())
 				BeforePids.Add(p.Id);
@@ -53,7 +64,7 @@ namespace run_runner
 
 
 			Draw();
-
+			CurrentProcessName = "scanning services";
 			ScServices = ServiceController.GetServices();
 			foreach(ServiceController scService in ScServices)
 			{
@@ -74,6 +85,7 @@ namespace run_runner
 			ProcessId = 0;
 
 			LastWaker = GetTimestamp() + 10;
+			CurrentProcessName = $"up: {GetSystemUpTimeInfo()} analyzing";
 
 			while(Run)
 			{
@@ -84,37 +96,32 @@ namespace run_runner
 				{
 					ServiceController sc = new ServiceController(scService.ServiceName);
 					if(!ServicesState.ContainsKey(sc.ServiceName))
-                    {
-                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
-                        ServicesState[sc.ServiceName] = sc.Status.ToString();
+					{
+						CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
+						ServicesState[sc.ServiceName] = sc.Status.ToString();
 						Debug($"added {sc.ServiceName} {sc.ServiceName}");
 					}
 
-                    if (ServicesState.ContainsKey(sc.ServiceName) &&
-                        ServicesState[sc.ServiceName] != sc.Status.ToString())
-                    {
-                        Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status.ToString()}");
+					if(ServicesState.ContainsKey(sc.ServiceName) &&
+						ServicesState[sc.ServiceName] != sc.Status.ToString())
+					{
+						Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status.ToString()}");
 						CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
-                        ServicesState[sc.ServiceName] = sc.Status.ToString();
-                    }
-                }
+						ServicesState[sc.ServiceName] = sc.Status.ToString();
+					}
+				}
 
-				if(GetTimestamp() - LastWaker > 9)
+				if(GetTimestamp() - LastWaker > 4 && !Done)
 				{
-					CurrentProcessName = $" done √ ";
+					var seconds = GetTimestamp() - StartTime;
+					CurrentProcessName = $"takes {seconds} seconds √";
 					Done = true;
 				}
 
-				if(GetTimestamp() - LastWaker > 11)
+
+				if(GetTimestamp() - LastWaker > 7)
 					Run = false;
 
-				/*if(GetTimestamp() - ProgramTimeLeft >= 2 && GetTimestamp() - LastWaker > 5)
-				{
-					CurrentProcessName = $"<scanning>";
-					ProgramTimeLeft = GetTimestamp();
-
-				}
-*/
 				foreach(Process p in Process.GetProcesses())
 				{
 					try
@@ -125,7 +132,7 @@ namespace run_runner
 
 					catch(Exception e)
 					{
-						Debug($"error listing for {p.Id}: {e.Message}");
+						//Debug($"error listing for {p.Id}: {e.Message}");
 					}
 
 					if(ProcessId == ServicesPid || ProcessId == ExplorerPid)
@@ -149,7 +156,9 @@ namespace run_runner
 					Draw();
 				}
 
-				Thread.Sleep(5);
+
+
+				Thread.Sleep(25);
 			}
 
 			Debug("leaving Run-runner");

@@ -43,5 +43,16 @@ namespace run_runner
 		{
             Environment.Exit(0);
 		}
+
+		private void label2_MouseEnter(object sender, EventArgs e)
+        {
+            
+            label2.ForeColor = Color.GreenYellow;
+		}
+
+		private void label2_MouseLeave(object sender, EventArgs e)
+		{
+            label2.ForeColor = Color.Aquamarine;
+		}
 	}
 }

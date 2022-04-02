@@ -42,9 +42,9 @@ namespace run_runner
 			this.centerText.CausesValidation = false;
 			this.centerText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.DarkOrange;
-			this.centerText.Location = new System.Drawing.Point(110, 14);
+			this.centerText.Location = new System.Drawing.Point(97, 14);
 			this.centerText.Name = "centerText";
-			this.centerText.Size = new System.Drawing.Size(472, 22);
+			this.centerText.Size = new System.Drawing.Size(470, 22);
 			this.centerText.TabIndex = 0;
 			this.centerText.Text = "centerText";
 			this.centerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -73,6 +73,8 @@ namespace run_runner
 			this.label2.TabIndex = 2;
 			this.label2.Text = "dismiss";
 			this.label2.Click += new System.EventHandler(this.label2_Click);
+			this.label2.MouseEnter += new System.EventHandler(this.label2_MouseEnter);
+			this.label2.MouseLeave += new System.EventHandler(this.label2_MouseLeave);
 			// 
 			// label3
 			// 
@@ -112,8 +114,8 @@ namespace run_runner
 		#endregion
 
 		public Label centerText;
-		private Label label1;
-		private Label label2;
-		private Label label3;
+        public Label label1;
+        public Label label2;
+        public Label label3;
 	}
 }

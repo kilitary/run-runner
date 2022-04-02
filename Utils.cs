@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace run_runner
@@ -84,5 +85,37 @@ namespace run_runner
 			DateTimeOffset now = DateTime.UtcNow;
 			return now.ToUnixTimeSeconds();
 		}
+
+        public static String GetSystemUpTimeInfo()
+        {
+            try
+            {
+                var time = GetSystemUpTime();
+                var upTime = $"{ (object) time.Hours:D2}h:{ (object) time.Minutes:D2}m:{ (object) time.Seconds:D2}s";//:{ (object) time.Milliseconds:D3}ms
+				return $"{ (object) upTime}";
+            }
+            catch (Exception ex)
+            {
+                //handle the exception your way
+                return String.Empty;
+            }
+        }
+
+        public static TimeSpan GetSystemUpTime()
+        {
+            try
+            {
+                using (var uptime = new PerformanceCounter("System", "System Up Time"))
+                {
+                    uptime.NextValue();
+                    return TimeSpan.FromSeconds(uptime.NextValue());
+                }
+            }
+            catch (Exception ex)
+            {
+                //handle the exception your way
+                return new TimeSpan(0, 0, 0, 0);
+            }
+        }
 	}
 }
