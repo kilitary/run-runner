@@ -12,6 +12,7 @@ namespace run_runner
 		public static string Cycler = " ";
 		public static string[]? ServicesStarting;
 		public static volatile bool Run = true;
+		public static Dictionary<string, string> ServicesState = new Dictionary<string, string>(300);
 		public static HashSet<int> BeforePids = new HashSet<int>();
 		public static string CurrentProcessName = "<scanning>";
 		public static int CycleD = 0;
@@ -44,11 +45,23 @@ namespace run_runner
 		░░░░░░░░░░░▌▌░▌▌░░░░░
 		░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
 
-            // collect existent 
-            foreach (Process p in Process.GetProcesses())
-                BeforePids.Add(p.Id);
+			// collect existent 
+			foreach(Process p in Process.GetProcesses())
+				BeforePids.Add(p.Id);
 
-            Debug($"collected {BeforePids.Count} pids");
+			Debug($"collected {BeforePids.Count} pids");
+
+
+			Draw();
+
+			ScServices = ServiceController.GetServices();
+			foreach(ServiceController scService in ScServices)
+			{
+				ServiceController sc = new ServiceController(scService.ServiceName);
+				ServicesState[sc.ServiceName] = sc.Status.ToString();
+			}
+
+			Debug($"got {ServicesState.Count} services");
 
 			int i = 0;
 
@@ -60,36 +73,31 @@ namespace run_runner
 			Debug($"found services: {ServicesPid} explorer: {ExplorerPid}");
 			ProcessId = 0;
 
-            LastWaker = GetTimestamp() + 10;
+			LastWaker = GetTimestamp() + 10;
 
 			while(Run)
-            {
-                Draw();
+			{
+				Draw();
 
-				/*ScServices = ServiceController.GetServices();
-
-				//Debug($"got {ScServices.Length} services");
-
+				ScServices = ServiceController.GetServices();
 				foreach(ServiceController scService in ScServices)
 				{
 					ServiceController sc = new ServiceController(scService.ServiceName);
-					//Debug($"checking service {sc.ServiceName}");
-					switch(sc.Status)
-					{
-						case ServiceControllerStatus.StartPending:
-						case ServiceControllerStatus.StopPending:
-						case ServiceControllerStatus.ContinuePending:
-						case ServiceControllerStatus.PausePending:
-							Debug($"service {scService.ServiceName} шевелица ({sc.Status})");
-							//ServicesStarting.Append(sc.DisplayName.Trim());
-							CurrentProcessName = $"<service> {scService.ServiceName}";
-
-							break;
-						default:
-							Debug($"service state: {sc.Status}");
-							break;
+					if(!ServicesState.ContainsKey(sc.ServiceName))
+                    {
+                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
+                        ServicesState[sc.ServiceName] = sc.Status.ToString();
+						Debug($"added {sc.ServiceName} {sc.ServiceName}");
 					}
-				}*/
+
+                    if (ServicesState.ContainsKey(sc.ServiceName) &&
+                        ServicesState[sc.ServiceName] != sc.Status.ToString())
+                    {
+                        Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status.ToString()}");
+						CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
+                        ServicesState[sc.ServiceName] = sc.Status.ToString();
+                    }
+                }
 
 				if(GetTimestamp() - LastWaker > 9)
 				{

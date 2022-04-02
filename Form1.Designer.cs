@@ -72,7 +72,7 @@ namespace run_runner
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Form1";
+			this.Text = "ss";
 			this.TopMost = true;
 			this.Click += new System.EventHandler(this.Form1_Click);
 			this.ResumeLayout(false);
