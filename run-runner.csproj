@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <ImplicitUsings>false</ImplicitUsings>
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>run_runner</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
-    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <Platforms>AnyCPU;x64</Platforms>
     <BaseOutputPath>result\</BaseOutputPath>
@@ -22,7 +23,13 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <SignAssembly>False</SignAssembly>
     <NeutralLanguage>ru-RU</NeutralLanguage>
-    <Version>0.1.2.0</Version>
+    <Version>0.1.4.0</Version>
+    <DebugType>embedded</DebugType>
+    <ErrorReport>send</ErrorReport>
+    <Authors>Kilitary</Authors>
+    <Company>axis9</Company>
+    <Copyright>2022</Copyright>
+    <RepositoryUrl>https://github.com/kilitary/run-runner</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <FileAlignment>2048</FileAlignment>
@@ -48,13 +55,14 @@
     <Content Include="Cinema.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="G:\Images\Dialog.png">
+    <None Include="f:\Images\Dialog.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.2-mauipre.1.22102.15" />
   </ItemGroup>
   <ItemGroup>

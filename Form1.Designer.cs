@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace run_runner
 {
@@ -40,11 +41,11 @@ namespace run_runner
 			// 
 			this.centerText.BackColor = System.Drawing.Color.Black;
 			this.centerText.CausesValidation = false;
-			this.centerText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.centerText.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.centerText.ForeColor = System.Drawing.Color.DarkOrange;
-			this.centerText.Location = new System.Drawing.Point(97, 14);
+			this.centerText.Location = new System.Drawing.Point(97, 15);
 			this.centerText.Name = "centerText";
-			this.centerText.Size = new System.Drawing.Size(470, 22);
+			this.centerText.Size = new System.Drawing.Size(451, 20);
 			this.centerText.TabIndex = 0;
 			this.centerText.Text = "centerText";
 			this.centerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -54,10 +55,10 @@ namespace run_runner
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.label1.Location = new System.Drawing.Point(12, 16);
+			this.label1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label1.Location = new System.Drawing.Point(12, 15);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(72, 19);
+			this.label1.Size = new System.Drawing.Size(64, 18);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "BOOTING";
 			// 

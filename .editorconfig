@@ -59,6 +59,13 @@ dotnet_diagnostic.CS8603.severity = none
 
 # CS8629: Nullable value type may be null.
 dotnet_diagnostic.CS8629.severity = silent
+csharp_space_around_binary_operators = before_and_after
+
+# CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+dotnet_diagnostic.CS8618.severity = none
+
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####
@@ -141,3 +148,4 @@ dotnet_style_qualification_for_event = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_field = false:silent
+indent_style = space

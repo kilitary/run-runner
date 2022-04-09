@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
@@ -72,13 +73,13 @@ namespace run_runner
 		{
 			OutputDebugStringA($"#run-runner {msg}");
 		}
-/*
+
 		public static string Jsonify(object obj, bool indent = false)
-        {
-            if(indent)
+		{
+			if(indent)
 				return JsonConvert.SerializeObject(obj, Formatting.Indented);
-            return JsonConvert.SerializeObject(obj);
-        }*/
+			return JsonConvert.SerializeObject(obj);
+		}
 
 		public static long GetTimestamp()
 		{
