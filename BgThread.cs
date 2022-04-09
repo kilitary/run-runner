@@ -12,7 +12,7 @@ namespace run_runner
 {
     public class ThreadWork
     {
-        public static ServiceController[] ScServices = new ServiceController[200];
+        public static ServiceController[] ScServices = new ServiceController[400];
         public static Process[] Procs;
         public static Dictionary<string, string> ServicesState = new();
         public static HashSet<int> BeforePids = new();
@@ -26,6 +26,7 @@ namespace run_runner
         public static int ProcessId = 0;
         public static int ExplorerPid = 0, ServicesPid = 0;
         public static long LastWaker = 0;
+        public static long LastRunTime = 0;
         public static long ProgramTimeLeft = 0;
         public static long LastDraw = 0;
         public static long StartTime = 0;
@@ -60,26 +61,26 @@ namespace run_runner
 			*/
 
             CurrentProcessName = "scanning processes";
-            Draw();
+
             // collect existent 
             foreach(Process p in Process.GetProcesses())
                 BeforePids.Add(p.Id);
 
             Debug($"collected {BeforePids.Count} pids");
 
-
             Draw();
+
             CurrentProcessName = "scanning services";
+            ScServices = new ServiceController[ServiceController.GetServices().Length];
             ScServices = ServiceController.GetServices();
+
             foreach(ServiceController scService in ScServices)
             {
-                ServiceController sc = new ServiceController(scService.ServiceName);
+                ServiceController sc = new(scService?.ServiceName);
                 ServicesState[sc.ServiceName] = sc.Status.ToString();
             }
 
-            Debug($"got {ServicesState.Count} services");
-
-            int i = 0;
+            Debug($"got {ScServices.Length} services");
 
             Procs = Process.GetProcessesByName("services");
             ServicesPid = Procs[0].Id;
@@ -90,7 +91,9 @@ namespace run_runner
             ProcessId = 0;
 
             LastWaker = GetTimestamp() + 10;
-            CurrentProcessName = $"observing system";
+            LastRunTime = GetTimestamp();
+
+            CurrentProcessName = $"waiting system";
 
             while(Run)
             {
@@ -99,10 +102,10 @@ namespace run_runner
                 ScServices = ServiceController.GetServices();
                 foreach(ServiceController scService in ScServices)
                 {
-                    ServiceController sc = new ServiceController(scService.ServiceName);
+                    ServiceController sc = new(scService.ServiceName);
                     if(!ServicesState.ContainsKey(sc.ServiceName))
                     {
-                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
+                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status}";
                         ServicesState[sc.ServiceName] = sc.Status.ToString();
                         Debug($"added {sc.ServiceName} {sc.ServiceName}");
                     }
@@ -110,15 +113,15 @@ namespace run_runner
                     if(ServicesState.ContainsKey(sc.ServiceName) &&
                         ServicesState[sc.ServiceName] != sc.Status.ToString())
                     {
-                        Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status.ToString()}");
-                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status.ToString()}";
+                        Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status}");
+                        CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status}";
                         ServicesState[sc.ServiceName] = sc.Status.ToString();
                     }
                 }
 
                 if(GetTimestamp() - LastWaker > 8 && !Done)
                 {
-                    var seconds = GetTimestamp() - StartTime;
+                    var seconds = LastRunTime - StartTime;
                     CurrentProcessName = $"takes {seconds} seconds √";
                     Done = true;
                 }
@@ -152,7 +155,7 @@ namespace run_runner
                         LastWaker = GetTimestamp();
                         CurrentProcessName = $"#{p.Id} {p.ProcessName}";
 
-                        ProgramTimeLeft = GetTimestamp();
+                        LastRunTime = ProgramTimeLeft = GetTimestamp();
 
                         //Thread.Sleep(40);
                     }
@@ -167,6 +170,7 @@ namespace run_runner
             }
 
             Debug("leaving Run-runner");
+
             Environment.Exit(0);
         }
 

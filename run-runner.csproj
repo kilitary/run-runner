@@ -63,7 +63,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.2-mauipre.1.22102.15" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0-preview.2.22152.2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
