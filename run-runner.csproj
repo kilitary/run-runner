@@ -55,7 +55,7 @@
     <Content Include="Cinema.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="f:\Images\Dialog.png">
+    <None Include="g:\Images\Dialog.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

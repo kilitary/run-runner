@@ -103,7 +103,7 @@ namespace run_runner
                 foreach(ServiceController scService in ScServices)
                 {
                     ServiceController sc = new(scService.ServiceName);
-                    if(!ServicesState.ContainsKey(sc.ServiceName))
+                    if(!ServicesState.ContainsKey(sc.ServiceName) && !Done)
                     {
                         CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status}";
                         ServicesState[sc.ServiceName] = sc.Status.ToString();
@@ -111,7 +111,7 @@ namespace run_runner
                     }
 
                     if(ServicesState.ContainsKey(sc.ServiceName) &&
-                        ServicesState[sc.ServiceName] != sc.Status.ToString())
+                        ServicesState[sc.ServiceName] != sc.Status.ToString() && !Done)
                     {
                         Debug($"changed {sc.ServiceName} {sc.ServiceName} => {sc.Status}");
                         CurrentProcessName = $"<service> {sc.ServiceName}: {sc.Status}";
@@ -143,7 +143,7 @@ namespace run_runner
                         //Debug($"error listing for {p.Id}: {e.Message}");
                     }
 
-                    if(ProcessId == ServicesPid || ProcessId == ExplorerPid)
+                    if(ProcessId == ServicesPid || ProcessId == ExplorerPid && !Done)
                     {
                         if(BeforePids.Contains(p.Id))
                             continue;
